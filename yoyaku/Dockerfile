@@ -1,10 +1,7 @@
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jdk
 
-# 设置工作目录
 WORKDIR /app
 
-# 复制 jar 包
-COPY target/Games-0.0.1-SNAPSHOT.jar app.jar
+COPY . .
 
-# 启动应用
-ENTRYPOINT ["java","-jar","app.jar"]
+CMD ["java", "-jar", "app.jar"]
