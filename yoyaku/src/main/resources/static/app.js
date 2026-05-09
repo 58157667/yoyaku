@@ -65,7 +65,7 @@ if (!emailRegex.test(email)) {
     try {
 
         const response = await fetch(
-            "https://yoyaku8.onrender.com:8080/api/reservations",
+            "http://yoyaku8.onrender.com:8080/api/reservations",
             {
                 method: "POST",
 
