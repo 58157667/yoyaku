@@ -14,11 +14,12 @@ public class ReservationController {
 
     @Autowired
     private ReservationRepository repository;
-
+    @Autowired
+    private MailService mailService;
     @PostMapping
     public String createReservation(
             @RequestBody Reservation reservation
-    ) {
+    ) throws Exception {
 
         boolean exists =
                 repository.existsByReserveDateAndReserveTime(
@@ -27,11 +28,16 @@ public class ReservationController {
                 );
 
         if (exists) {
-            return "この時間は既に予約されました。";
+            return "この時間は既に予約しました。";
         }
 
         repository.save(reservation);
-
+        try {
+			mailService.sendReservationMail(reservation);
+		} catch (Exception e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
         return "予約成功しました。";
     }
 }
