@@ -28,7 +28,7 @@ public class ReservationController {
                 );
 
         if (exists) {
-            return "この時間は既に予約しました。";
+            return "この時間は既に予約されました。";
         }
 
         repository.save(reservation);
