@@ -32,12 +32,13 @@ public class ReservationController {
         }
 
         repository.save(reservation);
+		 return "予約成功しました。";
         try {
 			mailService.sendReservationMail(reservation);
 		} catch (Exception e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
-        return "予約成功しました。";
+       
     }
 }
