@@ -28,11 +28,10 @@ public class ReservationController {
                 );
 
         if (exists) {
-            return "この時間は既に予約されました。";
+            return "この時間は既に予約しました。";
         }
 
         repository.save(reservation);
-		
         try {
 			mailService.sendReservationMail(reservation);
 		} catch (Exception e) {
