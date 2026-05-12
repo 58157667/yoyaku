@@ -1,11 +1,8 @@
 package com.example.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/reservations")
@@ -14,12 +11,14 @@ public class ReservationController {
 
     @Autowired
     private ReservationRepository repository;
+
     @Autowired
     private MailService mailService;
+
     @PostMapping
-    public String createReservation(
+    public ResponseEntity<String> createReservation(
             @RequestBody Reservation reservation
-    ) throws Exception {
+    ) {
 
         boolean exists =
                 repository.existsByReserveDateAndReserveTime(
@@ -27,17 +26,35 @@ public class ReservationController {
                         reservation.getReserveTime()
                 );
 
+        // 时间冲突
         if (exists) {
-            return "この時間は既に予約しました。";
+
+            return ResponseEntity
+                    .badRequest()
+                    .body("この時間は既に予約されています。");
+
         }
 
+        // 保存数据库
         repository.save(reservation);
+
+        // 发邮件
         try {
-			mailService.sendReservationMail(reservation);
-		} catch (Exception e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		}
-        return "予約成功しました。";
+
+            mailService.sendReservationMail(reservation);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            return ResponseEntity
+                    .internalServerError()
+                    .body("メール送信失敗");
+
+        }
+
+        // 成功
+        return ResponseEntity
+                .ok("予約成功しました。");
     }
 }
