@@ -84,7 +84,7 @@
       </div>
 
       <div class="form-group">
-        <label>電話番号</label>
+        <label>電話番号(ハイフンなしで入力してください)</label>
         <input type="text" id="phone" required />
       </div>
 
@@ -137,89 +137,129 @@
 
     </form>
   </div>
+<script>
 
-  <script>
+  // Formspree
+  const FORMSPREE_URL = "https://formspree.io/f/mqenwlpa";
 
-    // 替换成你的 Formspree endpoint
-    const FORMSPREE_URL = "https://formspree.io/f/mqenwlgz";
+  const form = document.getElementById("bookingForm");
+  const errorBox = document.getElementById("error");
+  const successBox = document.getElementById("success");
 
-    const form = document.getElementById("bookingForm");
-    const errorBox = document.getElementById("error");
-    const successBox = document.getElementById("success");
+  // 日期选择器：禁止今天之前
+  const dateInput = document.getElementById("date");
 
-    // 获取已预约数据
-    function getBookings() {
-      return JSON.parse(localStorage.getItem("bookings") || "[]");
-    }
+  const today = new Date();
 
-    // 保存预约
-    function saveBooking(booking) {
-      const bookings = getBookings();
-      bookings.push(booking);
-      localStorage.setItem("bookings", JSON.stringify(bookings));
-    }
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
 
-    // 检查时间冲突
-    function isTimeConflict(date, time) {
-      const bookings = getBookings();
+  dateInput.min = `${year}-${month}-${day}`;
 
-      return bookings.some(item => {
-        return item.date === date && item.time === time;
-      });
-    }
+  // 获取预约数据
+  function getBookings() {
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+    return JSON.parse(localStorage.getItem("bookings") || "[]");
+  }
 
-      errorBox.textContent = "";
-      successBox.textContent = "";
+  // 保存预约
+  function saveBooking(booking) {
 
-      const booking = {
-        姓名: document.getElementById("name").value,
-        电子邮件: document.getElementById("email").value,
-        电话: document.getElementById("phone").value,
-        日期: document.getElementById("date").value,
-        时间: document.getElementById("time").value,
-        服务: document.getElementById("service").value,
-      };
+    const bookings = getBookings();
 
-      // 检查冲突
-      if (isTimeConflict(booking.date, booking.time)) {
-        errorBox.textContent = "この時間は既に予約しました。";
-        return;
-      }
+    bookings.push(booking);
 
-      try {
+    localStorage.setItem("bookings", JSON.stringify(bookings));
+  }
 
-        // 发送到 Formspree
-        const response = await fetch(FORMSPREE_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-          },
-          body: JSON.stringify(booking)
-        });
+  // 检查时间冲突
+  function isTimeConflict(date, time) {
 
-        if (response.ok) {
+    const bookings = getBookings();
 
-          // 保存预约记录
-          saveBooking(booking);
+    return bookings.some(item => {
 
-          successBox.textContent = "予約成功";
-
-          form.reset();
-
-        } else {
-          errorBox.textContent = "発信失敗";
-        }
-
-      } catch (err) {
-        errorBox.textContent = "システムエラー";
-      }
+      return item.日期 === date && item.时间 === time;
     });
+  }
 
-  </script>
+  // 提交
+  form.addEventListener("submit", async (e) => {
+
+    e.preventDefault();
+
+    errorBox.textContent = "";
+    successBox.textContent = "";
+
+    // 电话号码
+    const phone = document.getElementById("phone").value.trim();
+
+    // 日本电话号码验证（10~11位数字）
+    const phoneRegex = /^[0-9]{10,11}$/;
+
+    if (!phoneRegex.test(phone)) {
+
+      errorBox.textContent = "正しい電話番号を入力してください";
+
+      return;
+    }
+
+    const booking = {
+
+      姓名: document.getElementById("name").value,
+      电子邮件: document.getElementById("email").value,
+      电话: phone,
+      日期: document.getElementById("date").value,
+      时间: document.getElementById("time").value,
+      服务: document.getElementById("service").value,
+    };
+
+    // 时间冲突检查
+    if (isTimeConflict(booking.日期, booking.时间)) {
+
+      errorBox.textContent = "この時間は既に予約しました。";
+
+      return;
+    }
+
+    try {
+
+      // 发送到 Formspree
+      const response = await fetch(FORMSPREE_URL, {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+
+        body: JSON.stringify(booking)
+      });
+
+      if (response.ok) {
+
+        // 保存预约
+        saveBooking(booking);
+
+        successBox.textContent = "予約成功";
+
+        form.reset();
+
+      } else {
+
+        errorBox.textContent = "発信失敗";
+      }
+
+    } catch (err) {
+
+      errorBox.textContent = "システムエラー";
+    }
+
+  });
+
+</script>
 
 </body>
 </html>
