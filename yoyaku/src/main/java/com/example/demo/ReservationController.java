@@ -12,9 +12,6 @@ public class ReservationController {
     @Autowired
     private ReservationRepository repository;
 
-    @Autowired
-    private MailService mailService;
-
     @PostMapping
     public ResponseEntity<String> createReservation(
             @RequestBody Reservation reservation
@@ -37,21 +34,6 @@ public class ReservationController {
 
         // 保存数据库
         repository.save(reservation);
-
-        // 发邮件
-        try {
-
-            mailService.sendReservationMail(reservation);
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-            return ResponseEntity
-                    .internalServerError()
-                    .body("メール送信失敗");
-
-        }
 
         // 成功
         return ResponseEntity
