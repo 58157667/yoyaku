@@ -13,7 +13,7 @@
     }
 
     .container {
-      max-width: 500px;
+      max-width: 600px;
       margin: auto;
       background: white;
       padding: 30px;
@@ -48,10 +48,19 @@
       color: white;
       border: none;
       cursor: pointer;
+      margin-top: 10px;
     }
 
     button:hover {
       background: #1258a7;
+    }
+
+    .back-btn {
+      background: #666;
+    }
+
+    .back-btn:hover {
+      background: #444;
     }
 
     .error {
@@ -62,14 +71,45 @@
 
     .success {
       color: green;
-      margin-top: 20px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .confirm-box {
+      background: #fafafa;
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .confirm-item {
+      margin-bottom: 15px;
+    }
+
+    .confirm-label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .hidden {
+      display: none;
     }
   </style>
 </head>
+
 <body>
 
-  <div class="container">
-    <h1>予約</h1>
+<div class="container">
+
+  <h1>予約</h1>
+
+  <!-- 输入页 -->
+  <div id="formPage">
+
+    <!-- 成功提示 -->
+    <div class="success" id="success"></div>
 
     <form id="bookingForm">
 
@@ -95,8 +135,11 @@
 
       <div class="form-group">
         <label>予約時間</label>
+
         <select id="time" required>
+
           <option value="">選択してください</option>
+
           <option value="10:00">10:00</option>
           <option value="11:00">11:00</option>
           <option value="12:00">12:00</option>
@@ -104,49 +147,114 @@
           <option value="14:00">14:00</option>
           <option value="15:00">15:00</option>
           <option value="16:00">16:00</option>
-			          <option value="17:00">17:00</option>
+          <option value="17:00">17:00</option>
           <option value="18:00">18:00</option>
           <option value="19:00">19:00</option>
+
         </select>
       </div>
 
       <div class="form-group">
+
         <label>サービス</label>
+
         <select id="service" required>
-          <option>選択してください</option>
-		        <option>かっさ 20分/1800円</option>
-        <option>吸い玉(伝統火罐十スライドカッピング) 20分/3000円</option>
-  
- <option>手技による伝統懸灸(肩·首·腰·背中) 60分/7000円</option>
-        <option>手技による伝統懸灸(肩·首·腰·背中) 十 吸い玉 75分/9000円</option>
-        <option>手技による伝統懸灸(肩·首·腰·背中) 十 かっさ 70分/8000円</option>
-        <option>手技による伝統懸灸(胸部) 60分/7000円</option>
-         <option>手技による伝統懸灸(腹部) 60分/7000円</option>
+
+          <option value="">選択してください</option>
+
+          <option>かっさ 20分/1800円</option>
+          <option>吸い玉(伝統火罐十スライドカッピング) 20分/3000円</option>
+          <option>手技による伝統懸灸(肩·首·腰·背中) 60分/7000円</option>
+          <option>手技による伝統懸灸(肩·首·腰·背中) 十 吸い玉 75分/9000円</option>
+          <option>手技による伝統懸灸(肩·首·腰·背中) 十 かっさ 70分/8000円</option>
+          <option>手技による伝統懸灸(胸部) 60分/7000円</option>
+          <option>手技による伝統懸灸(腹部) 60分/7000円</option>
           <option>手技による伝統懸灸(頭部·顔) 60分/6000円</option>
-           <option>小児向け伝統施術(推拿·脊柱ケ·腹部ケア) 60分/6000円</option>
-            <option>手技による伝統懸灸(脚) 70分/8000円</option>
-             <option>手技による伝統懸灸(背中+腹部) 120分/13000円</option>
+          <option>小児向け伝統施術(推拿·脊柱ケ·腹部ケア) 60分/6000円</option>
+          <option>手技による伝統懸灸(脚) 70分/8000円</option>
+          <option>手技による伝統懸灸(背中+腹部) 120分/13000円</option>
 
         </select>
+
       </div>
 
-      <button type="submit">提出</button>
+      <button type="submit">
+        確認ページへ
+      </button>
 
       <div class="error" id="error"></div>
-      <div class="success" id="success"></div>
 
     </form>
+
   </div>
+
+  <!-- 确认页 -->
+  <div id="confirmPage" class="hidden">
+
+    <div class="confirm-box">
+
+      <div class="confirm-item">
+        <div class="confirm-label">名前</div>
+        <div id="confirmName"></div>
+      </div>
+
+      <div class="confirm-item">
+        <div class="confirm-label">電子メール</div>
+        <div id="confirmEmail"></div>
+      </div>
+
+      <div class="confirm-item">
+        <div class="confirm-label">電話番号</div>
+        <div id="confirmPhone"></div>
+      </div>
+
+      <div class="confirm-item">
+        <div class="confirm-label">予約年月日</div>
+        <div id="confirmDate"></div>
+      </div>
+
+      <div class="confirm-item">
+        <div class="confirm-label">予約時間</div>
+        <div id="confirmTime"></div>
+      </div>
+
+      <div class="confirm-item">
+        <div class="confirm-label">サービス</div>
+        <div id="confirmService"></div>
+      </div>
+
+    </div>
+
+    <button id="sendBtn">
+      確認して送信
+    </button>
+
+    <button id="backBtn" class="back-btn">
+      修正する
+    </button>
+
+    <div class="error" id="confirmError"></div>
+
+  </div>
+
+</div>
+
 <script>
 
-  // Formspree
   const FORMSPREE_URL = "https://formspree.io/f/mqenwlgz";
 
   const form = document.getElementById("bookingForm");
+
+  const formPage = document.getElementById("formPage");
+  const confirmPage = document.getElementById("confirmPage");
+
   const errorBox = document.getElementById("error");
+  const confirmError = document.getElementById("confirmError");
   const successBox = document.getElementById("success");
 
-  // 日期选择器：禁止今天之前
+  let bookingData = null;
+
+  // 日期最小值
   const dateInput = document.getElementById("date");
 
   const today = new Date();
@@ -157,7 +265,7 @@
 
   dateInput.min = `${year}-${month}-${day}`;
 
-  // 获取预约数据
+  // 获取预约
   function getBookings() {
 
     return JSON.parse(localStorage.getItem("bookings") || "[]");
@@ -173,7 +281,7 @@
     localStorage.setItem("bookings", JSON.stringify(bookings));
   }
 
-  // 检查时间冲突
+  // 时间冲突检查
   function isTimeConflict(date, time) {
 
     const bookings = getBookings();
@@ -184,18 +292,16 @@
     });
   }
 
-  // 提交
-  form.addEventListener("submit", async (e) => {
+  // 第一步：进入确认页
+  form.addEventListener("submit", function (e) {
 
     e.preventDefault();
 
     errorBox.textContent = "";
     successBox.textContent = "";
 
-    // 电话号码
     const phone = document.getElementById("phone").value.trim();
 
-    // 日本电话号码验证（10~11位数字）
     const phoneRegex = /^[0-9]{10,11}$/;
 
     if (!phoneRegex.test(phone)) {
@@ -205,7 +311,7 @@
       return;
     }
 
-    const booking = {
+    bookingData = {
 
       姓名: document.getElementById("name").value,
       电子邮件: document.getElementById("email").value,
@@ -215,17 +321,48 @@
       服务: document.getElementById("service").value,
     };
 
-    // 时间冲突检查
-    if (isTimeConflict(booking.日期, booking.时间)) {
+    // 时间冲突
+    if (isTimeConflict(bookingData.日期, bookingData.时间)) {
 
-      errorBox.textContent = "この時間は既に予約しました。";
+      errorBox.textContent = "この時間は既に予約されています。";
 
       return;
     }
 
+    // 显示确认内容
+    document.getElementById("confirmName").textContent = bookingData.姓名;
+    document.getElementById("confirmEmail").textContent = bookingData.电子邮件;
+    document.getElementById("confirmPhone").textContent = bookingData.电话;
+    document.getElementById("confirmDate").textContent = bookingData.日期;
+    document.getElementById("confirmTime").textContent = bookingData.时间;
+    document.getElementById("confirmService").textContent = bookingData.服务;
+
+    // 页面切换
+    formPage.classList.add("hidden");
+    confirmPage.classList.remove("hidden");
+
+    window.scrollTo(0, 0);
+
+  });
+
+  // 返回修改
+  document.getElementById("backBtn").addEventListener("click", function () {
+
+    confirmPage.classList.add("hidden");
+    formPage.classList.remove("hidden");
+
+    window.scrollTo(0, 0);
+
+  });
+
+  // 最终发送
+  document.getElementById("sendBtn").addEventListener("click", async function () {
+
+    confirmError.textContent = "";
+    successBox.textContent = "";
+
     try {
 
-      // 发送到 Formspree
       const response = await fetch(FORMSPREE_URL, {
 
         method: "POST",
@@ -235,26 +372,38 @@
           "Accept": "application/json"
         },
 
-        body: JSON.stringify(booking)
+        body: JSON.stringify(bookingData)
+
       });
 
       if (response.ok) {
 
         // 保存预约
-        saveBooking(booking);
+        saveBooking(bookingData);
 
-        successBox.textContent = "予約成功";
+        // 返回输入页
+        confirmPage.classList.add("hidden");
+        formPage.classList.remove("hidden");
 
+        // 成功提示
+        successBox.textContent = "予約が完了しました。";
+
+        // 清空表单
         form.reset();
+
+        // 回顶部
+        window.scrollTo(0, 0);
 
       } else {
 
-        errorBox.textContent = "発信失敗";
+        confirmError.textContent = "送信失敗";
+
       }
 
     } catch (err) {
 
-      errorBox.textContent = "システムエラー";
+      confirmError.textContent = "システムエラー";
+
     }
 
   });
